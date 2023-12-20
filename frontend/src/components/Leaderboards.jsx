@@ -1,7 +1,7 @@
 const Leaderboards = () => {
 	return (
-		<div>
-			<h3>Top 5 scores</h3>
+		<div id="leaderboard-container">
+			<h3>Top 10 scores</h3>
 
 			<ul>
 				<li>User - 500</li>

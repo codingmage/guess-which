@@ -10,45 +10,53 @@ const db = new sqlite3.Database('./db/imdb.db', sqlite3.OPEN_READONLY, (err) => 
 
 const usedIds = []
 
-moviesRouter.get('/game', async (reqquest, response) => {
+moviesRouter.get('/game', async (request, response) => {
 
-    const query = "SELECT * FROM titles ORDER BY RANDOM() LIMIT 1;"
+    let query
 
-    /* const query = "SELECT * FROM titles WHERE title_id NOT IN ORDER BY RANDOM() LIMIT 1;" */
+    if (usedIds.length === 0) {
+        query = "SELECT * FROM titles ORDER BY RANDOM() LIMIT 1;"
+    } else {
+        query = "SELECT * FROM titles WHERE title_id NOT IN ( " + usedIds.map(() => "?").join(',') + " ) ORDER BY RANDOM() LIMIT 1;"
+    }
 
     // https://stackoverflow.com/questions/34349199/node-js-sqlite3-in-operator
 
-    db.get(query, (err, row) => {
-        if (err) {
-            throw err;
-        }
-
-        return row
-            ? (usedIds.push(row.title_id), response.json(row))
-            : console.log("There was a problem getting the movie.")
+    const chosenMovie = await new Promise((resolve, reject) => {
+        db.get(query, usedIds, (err, row) => {
+            if (err) {
+                throw err;
+            }
+    
+            return row
+                ? (usedIds.push(row.title_id), resolve(row))
+                : (console.log("There was a problem getting the movie."), reject(err))
+        })
     })
-
-    console.log(usedIds)
+    
+    response.json(chosenMovie)
 })
 
-moviesRouter.get('/names', async (reqquest, response) => {
+moviesRouter.get('/names', async (request, response) => {
 
     let names = []
 
     const query = "SELECT primary_title FROM titles"
 
-    db.all(query, (err, rows) => {
-        if (err) {
-            throw err;
-        }
-
-        rows.forEach((row) => {
-            names.push(row.primary_title)
+    await new Promise((resolve, reject) => {
+        db.all(query, (err, rows) => {
+            if (err) {
+                throw err;
+            }
+    
+            rows.forEach((row) => {
+                names.push(row.primary_title)
+            })
+            resolve()
         })
-
-        response.json(names)
     })
 
+    response.json(names)
     
 })
 

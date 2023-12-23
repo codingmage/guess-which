@@ -55,4 +55,31 @@ usersRouter.get("/", async (request, response) => {
 	response.json(users)
 })
 
+usersRouter.put("/:id", async (request, response) => {
+	const thisUserId = Number(request.params.id) 
+
+	const loggedUser = request.user
+
+	console.log(loggedUser.id)
+	console.log(thisUserId)
+
+	if(loggedUser.id !== thisUserId) {
+		response.status(401).json("Wrong user!")
+	} else {
+		const { highScore } = request.body
+
+		await new Promise((resolve, reject) => {
+			db.run("UPDATE users SET score = ? WHERE id = ?", [highScore, thisUserId], (err) => {
+				if(err){
+					reject(err)
+				}
+				resolve()
+			})
+		})
+
+		response.status(201).json("Score updated!")
+	}
+	
+})
+
 module.exports = usersRouter

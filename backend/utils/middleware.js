@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+const sqlite3 = require('sqlite3')
 
 const getToken = (request, response, next) => {
     const authorization = request.get('authorization')
@@ -10,16 +11,28 @@ const getToken = (request, response, next) => {
 }
 
 const getUser = async (request, response, next) => {
-    if (request.method === 'POST' || request.method === 'DELETE') {
+
+    if (request.method === 'PUT') {
         const verifiedToken = jwt.verify(request.token, "cs50")
+
+        let db = new sqlite3.Database('./db/users.db');
 
         if (verifiedToken) {
             if (!verifiedToken.id) {
                 return response.status(401).json({ error: 'token invalid' })
             }
-            const thisUser = await User.findById(verifiedToken.id)
+            const thisUser = await new Promise((resolve, reject) => {
+                db.get("SELECT * FROM users WHERE id = ?", verifiedToken.id, (err, row) => {
+                    if(err) {
+                        reject(err)
+                    }
+                    resolve(row)
+                })
+            })
             request.user = thisUser
         }
+
+        db.close()
     }
 
     next()

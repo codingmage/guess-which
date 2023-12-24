@@ -1,18 +1,32 @@
 import { useState } from "react"
 import Modal from "@mui/material/Modal"
 import Box from "@mui/material/Box"
+import loginService from "../services/login"
 
-export function LoginComponent () {
+
+export function LoginComponent ({ loginUser }) {
 
 	const [open, setOpen] = useState(false)
+	const [registerUsername, setRegisterUsername] = useState("")
+	const [registerPassworde, setRegisterPassword] = useState("")
+	const [loginUsername, setLoginUsername] = useState("")
+	const [loginPassword, setLoginPassword] = useState("")
 
-	const handleOpen = (event) => {
+	function handleOpen (event) {
 		event.preventDefault()
 		setOpen(true)
 	}
-	const handleClose = (event) => {
+
+	function handleClose (event) {
 		event.preventDefault()
 		setOpen(false)
+	}
+
+	function handleLogin(event) {
+		event.preventDefault()
+		loginUser({ username: loginUsername, password: loginPassword })
+		setLoginUsername("")
+		setLoginPassword("")
 	}
 
 
@@ -21,12 +35,12 @@ export function LoginComponent () {
 			<div id="login-content">
 				<h2>Greetings!</h2>
 				<h3>Please login or register to continue.</h3>
-				<form id="login-form">
+				<form id="login-form" onSubmit={handleLogin}>
 					<div>
-						<label>Username </label> <input type="text" /> 
+						<label>Username </label> <input onChange={({ target }) => setLoginUsername(target.value) } type="text" /> 
 					</div>
 					<div>
-						<label>Password </label> <input type="text" />
+						<label>Password </label> <input onChange={({ target }) => setLoginPassword(target.value) } type="text" />
 					</div>
 
 					<div id="button-container">

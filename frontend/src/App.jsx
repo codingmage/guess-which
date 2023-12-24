@@ -3,6 +3,8 @@ import "./index.css"
 import { LoginComponent } from "./components/LoginComponent"
 import PreGameComponent from "./components/PreGameComponent"
 import Leaderboards from "./components/Leaderboards"
+import loginService from "./services/login"
+import userService from "./services/users"
 
 function App() {
 	const [playerScore, setPlayerScore] = useState(0)
@@ -12,15 +14,6 @@ function App() {
 	const [year, setYear] = useState("???")
 	const [director, setDirector] = useState("???")
 	const [cast, setCast] = useState("???")
-
-
-	if (!user) {
-		return <LoginComponent />
-	}
-
-	if (!gameStart) {
-		return <PreGameComponent startTheGame={setGameStart} />
-	}
 
 	const handleHints = () => {
 		if(year === "???") {
@@ -46,6 +39,25 @@ function App() {
 			const currentScore = playerScore + score
 			setPlayerScore(currentScore)
 		}
+	}
+
+	async function userLogin(userCredentials) {
+		try {
+			const user = await loginService.login(userCredentials)
+			userService.setToken(user.token)
+			setUser(user)
+			window.localStorage.setItem("loggedInUser", JSON.stringify(user))
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
+	if (!user) {
+		return <LoginComponent loginUser={userLogin} />
+	}
+	
+	if (!gameStart) {
+		return <PreGameComponent startTheGame={setGameStart} />
 	}
 
 	return (
@@ -76,9 +88,6 @@ function App() {
 			<footer>
 				<button>info</button>
 			</footer>
-
-
-
 
 			{/* <Leaderboards /> */}
 		</div>

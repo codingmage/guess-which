@@ -5,44 +5,65 @@ import PreGameComponent from "./components/PreGameComponent"
 import Leaderboards from "./components/Leaderboards"
 import loginService from "./services/login"
 import userService from "./services/users"
+import scoreMultiplier from "./utils/scoreMultiplier"
 
 function App() {
 	const [playerScore, setPlayerScore] = useState(0)
 	const [user, setUser] = useState(false)
 	const [gameStart, setGameStart] = useState(false)
-	const [genre, setGenre] = useState("get from database")
+	const [film, setFilm] = useState({
+		genre: "???",
+		year: "???",
+		director: "???",
+		cast: "???"
+	})
+	/* 	const [genre, setGenre] = useState("get from database")
 	const [year, setYear] = useState("???")
 	const [director, setDirector] = useState("???")
-	const [cast, setCast] = useState("???")
+	const [cast, setCast] = useState("???") */
 
-	const handleHints = () => {
-		if(year === "???") {
-			setYear(1999)
-		} else if (director === "???") {
-			setDirector("Nolan")
-		} else if (cast === "???") {
-			setCast("JGL, Chris Evans")
+	function handleHints () {
+		if(film.year === "???") {
+			setFilm({...film, year: 1999})
+		} else if (film.director === "???") {
+			setFilm({...film, director: "Nolan"})
+		} else if (film.cast === "???") {
+			setFilm({...film, cast: "JGL, Chris Evans"})
 		}
 	}
 
-	const scoreCalculator = () => {
+	/* 	function scoreCalculator () {
 		if(year === "???") {
-			const score = 10 * 5 * 3 * 2
-			const currentScore = playerScore + score
-			setPlayerScore(currentScore)
+			const score = scoreMultiplier(3, playerScore)
+			setPlayerScore(score)
 		} else if (director === "???") {
-			const score = 10 * 3 * 2
-			const currentScore = playerScore + score
-			setPlayerScore(currentScore)
+			const score = scoreMultiplier(2, playerScore)
+			setPlayerScore(score)
 		} else if (cast === "???") {
-			const score = 10 * 2
-			const currentScore = playerScore + score
-			setPlayerScore(currentScore)
+			const score = scoreMultiplier(1, playerScore)
+			setPlayerScore(score)
+		} else {
+			const score = playerScore + 10
+			setPlayerScore(score)
 		}
-	}
+	} */
 
 	async function userLogin(userCredentials) {
 		try {
+			const user = await loginService.login(userCredentials)
+			userService.setToken(user.token)
+			setUser(user)
+			window.localStorage.setItem("loggedInUser", JSON.stringify(user))
+		} catch (error) {
+			window.alert("Wrong username or password")
+			console.log(error)
+		}
+	}
+
+	async function userRegister(userCredentials) {
+		try {
+			await userService.registerUser(userCredentials)
+			window.alert("User created! Click ok and you will login shortly.")
 			const user = await loginService.login(userCredentials)
 			userService.setToken(user.token)
 			setUser(user)
@@ -52,8 +73,9 @@ function App() {
 		}
 	}
 
+
 	if (!user) {
-		return <LoginComponent loginUser={userLogin} />
+		return <LoginComponent loginUser={userLogin} registerUser={userRegister} />
 	}
 	
 	if (!gameStart) {
@@ -66,10 +88,10 @@ function App() {
 				<h1>Game Start!</h1>
 			
 				<ul>
-					<li>Genre: {genre}</li>
-					<li>Year: {year}</li>
-					<li>Director: {director}</li>
-					<li>Main cast: {cast}</li>
+					<li>Genre: {film.genre}</li>
+					<li>Year: {film.year}</li>
+					<li>Director: {film.director}</li>
+					<li>Main cast: {film.cast}</li>
 				</ul>
 
 				<span>

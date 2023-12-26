@@ -1,4 +1,4 @@
-function scoreMultiplier (hintsLeft, currentScore) {
+export default function scoreMultiplier (hintsLeft, currentScore) {
 
 	let multiplier
 

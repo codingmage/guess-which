@@ -13,3 +13,22 @@
     There's a leaderboard to save the highest scores (and the user who got them). The user (and the scores) are saved in a separate, simple SQLite database. I considered making a separate table for scores, but since I only care about 1 scoreper user I decided to just have that be a column in the user table. If I ever decide to expand the project, like, say, adding a new type of guessing game that does not involve movies, I'd consider making a table for keeping the scores and refering the user who has it.
 
     I studied fullstackopen's <URL https://fullstackopen.com/en/> part in regards to the backend part, and use its backend chapter and user handling as a basis for this app, merging what I had learned with CS50 and this course. The middleware used is also a part of that course's exercise, as well as the way the frontend interacts with the backend. The sqlite3 inteation with NodeJS was taken from sqlite's own tutorial. <URL https://www.sqlitetutorial.net/sqlite-nodejs/>
+
+    remakes with the same name
+
+<!--     SELECT * FROM titles JOIN ratings ON titles.title_id = ratings.title_id ORDER BY RANDOM() LIMIT 1
+
+    SELECT * FROM titles JOIN ratings ON titles.title_id = ratings.title_id JOIN crew ON titles.title_id = crew.title_id ORDER BY RANDOM() LIMIT 1;
+
+    SELECT * FROM titles JOIN ratings ON titles.title_id = ratings.title_id JOIN crew ON titles.title_id = crew.title_id JOIN people WHERE people.person_id IN (crew.person_id) ORDER BY RANDOM() LIMIT 1;
+
+    SELECT * FROM titles JOIN ratings ON titles.title_id = ratings.title_id JOIN crew ON titles.title_id = crew.title_id JOIN people WHERE people.person_id IN (crew.person_id) ORDER BY RANDOM() LIMIT 1;
+
+    SELECT * FROM titles JOIN ratings ON titles.title_id = ratings.title_id JOIN crew ON titles.title_id = crew.title_id JOIN people WHERE people.person_id IN (crew.person_id) AND crew.category = "director" ORDER BY RANDOM() LIMIT 1;
+
+    Full movie with director:
+
+    SELECT titles.title_id, titles.primary_title, titles.premiered, titles.genres, titles.runtime_minutes, ratings.rating, people.name FROM titles JOIN ratings ON titles.title_id = ratings.title_id JOIN crew ON titles.title_id = crew.title_id JOIN people WHERE people.person_id IN (crew.person_id) AND crew.category = "director" ORDER BY RANDOM() LIMIT 1;
+
+
+    -->

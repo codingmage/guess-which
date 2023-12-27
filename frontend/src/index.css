@@ -78,12 +78,14 @@ label {
   width: 100vw;
 }
 
-#leaderboard-container {
- /*  align-self: flex-end; */
-}
-
 footer {
   align-items: flex-end;
+}
+
+.MuiBox-root {
+  border: 4px solid rgba(40, 152, 226, 0.624);
+  border-radius: 1rem;
+  padding: 2rem;
 }
 
 /* :root {

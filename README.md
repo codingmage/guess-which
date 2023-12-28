@@ -12,7 +12,7 @@
 
     There's a leaderboard to save the highest scores (and the user who got them). The user (and the scores) are saved in a separate, simple SQLite database. I considered making a separate table for scores, but since I only care about 1 scoreper user I decided to just have that be a column in the user table. If I ever decide to expand the project, like, say, adding a new type of guessing game that does not involve movies, I'd consider making a table for keeping the scores and refering the user who has it.
 
-    I studied fullstackopen's <URL https://fullstackopen.com/en/> part in regards to the backend part, and use its backend chapter and user handling as a basis for this app, merging what I had learned with CS50 and this course. The middleware used is also a part of that course's exercise, as well as the way the frontend interacts with the backend. The sqlite3 inteation with NodeJS was taken from sqlite's own tutorial. <URL https://www.sqlitetutorial.net/sqlite-nodejs/>
+    I studied fullstackopen's <URL https://fullstackopen.com/en/> parts 4-5 in regards to the backend part, and use its backend chapter and user handling as a basis for this app, merging what I had learned with CS50 and this course. The middleware used is also a part of that course's exercise, as well as the way the frontend interacts with the backend. I did not yet study the course's part on relational database, so the sqlite3 interaction with NodeJS was taken from sqlite's own tutorial. <URL https://www.sqlitetutorial.net/sqlite-nodejs/>
 
     remakes with the same name
 

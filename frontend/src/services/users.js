@@ -14,7 +14,18 @@ async function registerUser (credentials) {
 
 async function getAllUsers () {
 	const request = await axios.get(baseUrl)
-	return request.then((response) => response.data)
+	return request.data
+	/* return request.then((response) => response.data) */
 }
 
-export default { getAllUsers, setToken, registerUser }
+async function updateUserScore (id, score) {
+	const config = {
+		headers: { Authorization: token },
+	}
+	
+	const request = await axios.put(`${baseUrl}/${id}`, {highScore: score}, config)
+	return request.data
+
+}
+
+export default { getAllUsers, setToken, registerUser, updateUserScore }

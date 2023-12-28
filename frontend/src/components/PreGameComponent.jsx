@@ -9,7 +9,7 @@ const PreGameComponent = ({startTheGame}) => {
 			<p>For each hint you ask for, your score multiplier will decrease. The genre hint is the first one and it is free! You get no extra points for blindly guessing though.</p>
 			<p>You have 3 lives. If you guess wrong, one life will be taken away. Your score will be reset if you guess wrong and have no lives left.</p>
 
-			<button onClick={() => startTheGame(true)}>Start the game!</button>
+			<button onClick={startTheGame}>Start the game!</button>
 		</div>
 
 	)

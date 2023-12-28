@@ -56,7 +56,6 @@ export function LoginComponent ({ loginUser, registerUser }) {
 					</div>
 				</form>
 
-				{/* <form onSubmit={handleRegister}> */}
 				<Modal 
 					open={open} 
 					onClose={handleClose}         
@@ -82,7 +81,6 @@ export function LoginComponent ({ loginUser, registerUser }) {
 
 					</Box>
 				</Modal>
-				{/* </form> */}
 				<span>Note: You only need an username and a password to create an account!</span>	
 			</div>
 		</div>

@@ -1,4 +1,4 @@
-const PreGameComponent = ({startTheGame}) => {
+const PreGameComponent = ({startTheGame, logUserOut}) => {
 
 	return (
 		<div>
@@ -10,6 +10,8 @@ const PreGameComponent = ({startTheGame}) => {
 			<p>You have 3 lives. If you guess wrong, one life will be taken away. Your score will be reset if you guess wrong and have no lives left.</p>
 
 			<button onClick={startTheGame}>Start the game!</button>
+
+			<button onClick={logUserOut}>Log out</button>
 		</div>
 
 	)

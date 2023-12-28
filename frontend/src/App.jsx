@@ -7,7 +7,8 @@ import loginService from "./services/login"
 import userService from "./services/users"
 import moviesService from "./services/movies"
 import { Autocomplete, Box, TextField } from "@mui/material"
-import "ldrs/dotWave"
+import FavoriteIcon from "@mui/icons-material/Favorite"
+import LoadingIcon from "./components/LoadingIcon"
 
 function App() {
 	const [playerScore, setPlayerScore] = useState(0)
@@ -28,12 +29,20 @@ function App() {
 	const [inputValue, setInputValue] = useState("")
 	const [isLoading, setIsLoading] = useState()
 	const [lives, setLives] = useState(3)
+	const [top10, setTop10] = useState(["Loading..."])
+	const [hearts, setHearts]= useState()
+
 
 	useEffect(() => {
 		setIsLoading(true)
 		moviesService.getGame().then(movie => {
 
 			if(movie) {
+
+				const startsWithThe = movie.primary_title.startsWith("(The)")
+
+				const movieTitleStart = startsWithThe ? `The ${movie.primary_title.charAt(4)}` : movie.primary_title.charAt(0)
+
 				setAnswer({
 					title: movie.primary_title,
 					genre: movie.genres,
@@ -41,7 +50,7 @@ function App() {
 					runtime: movie.runtime_minutes,
 					rating: movie.rating,
 					director: movie.name,
-					firstLetter: movie.primary_title.charAt(0),
+					firstLetter: movieTitleStart,
 					titleLength: movie.primary_title.length
 				})
 
@@ -53,6 +62,8 @@ function App() {
 					firstLetter: "???",
 					titleLength: "???",
 				})
+
+				setValue("")
 
 				setIsLoading(false)
 
@@ -80,6 +91,22 @@ function App() {
 			setUser(user)
 		}
 	}, [])
+
+	useEffect(() => {
+		userService.getTop10Users().then((users) => {
+			setTop10(users)
+		})
+	}, [])
+
+	useEffect(() => {
+		let currentHearts= []
+
+		for(let i = 0; i < lives; i++) {
+			currentHearts.push(<FavoriteIcon color="error" key={i} />)
+		}
+		
+		setHearts(currentHearts)
+	}, [lives])
 
 	async function handleHints () {
 		if (film.genre === "???") {
@@ -145,8 +172,22 @@ function App() {
 		}
 	}
 
+	async function lifeLoss() {
+		const loseLife = lives - 1
+		if(loseLife === 0) {
+			alert(`You're out of lives! Your final score was ${playerScore}. Thanks for playing.`)
+			await userService.updateUserScore(user.id, playerScore)
+			setPlayerScore(0)
+			setLives(3)
+			setRound(0)
+			setGameStart(false)
+		} else {
+			setLives(loseLife)
+		}
+	}
+
 	async function handleGuess() {
-		if(value === answer.title)
+		if(value === answer.title || inputValue.toLowerCase === answer.title.toLowerCase)
 		{
 			alert("Correct!")
 			scoreCalculator()
@@ -159,17 +200,7 @@ function App() {
 			}
 		} else {
 			alert("Incorrect!")
-			const loseLife = lives - 1
-			if(loseLife === 0) {
-				alert(`You're out of lives! Your final score was ${playerScore}. Thanks for playing.`)
-				await userService.updateUserScore(user.id, playerScore)
-				setPlayerScore(0)
-				setLives(3)
-				setRound(0)
-				setGameStart(false)
-			} else {
-				setLives(loseLife)
-			}
+			lifeLoss()
 		}
 	}
 
@@ -180,6 +211,8 @@ function App() {
 
 	function handleRestart() {
 		setRound(0)
+		setPlayerScore(0)
+		setLives(3)
 		setGameStart(false)
 	}
 
@@ -189,12 +222,21 @@ function App() {
 		window.location.reload()
 	}
 
+	function handleGivingUp() {
+		alert(`The film was ${answer.title}!`)
+		lifeLoss()
+		if(lives > 0) {
+			const nextRound = round + 1
+			setRound(nextRound)
+		}
+	}
+
 	if (!user) {
 		return <LoginComponent loginUser={userLogin} registerUser={userRegister} />
 	}
 	
 	if (!gameStart) {
-		return <PreGameComponent startTheGame={handleGameStart} />
+		return <PreGameComponent startTheGame={handleGameStart} logUserOut={handleLogout} />
 	}
 
 	return (
@@ -205,14 +247,13 @@ function App() {
 				<Box>
 
 					{isLoading? 
-						<div className="loading-content">
-							<h3>Loading </h3>
-							<l-dot-wave size="50" color={"white"}/>
-						</div> 
+						<LoadingIcon />
 						: 
 						<div> 					
 						
-							<h3>Current round: {round}</h3>
+							<h2>Round: {round}</h2>
+							<h3>Lives: {hearts}</h3>
+
 			
 							<ul>
 								<li>Genre: {film.genre}</li>
@@ -222,7 +263,7 @@ function App() {
 								<li>First letter: {film.firstLetter}</li>
 								<li>Title length: {film.titleLength}</li>
 							</ul>
-							<span>
+							<div>
 								<Autocomplete 
 									options={names.sort()}
 									onChange={(event, newValue) => {
@@ -232,17 +273,21 @@ function App() {
 									onInputChange={(event, newInputValue) => {
 										setInputValue(newInputValue)
 									}}
-									/* clearOnBlur={false} */
-									fullWidth
+									/* fullWidth */
 									disablePortal
 									id="combo-box-demo"
-									sx={{ width: 400 }}
-									renderInput={(params) => <TextField {...params} size="medium" label="Movie" />}
+									sx={{ width: 300 }}
+									renderInput={(params) => <TextField {...params}     sx={{
+										borderRadius: "0.5rem",
+										"& fieldset": { borderRadius: "0.5rem" },
+									}} size="small" label="Movie" />}
 			
 								/>
-			
+							</div>
+							<span>
 								<button onClick={handleGuess} disabled={isLoading}>Guess</button>
 								<button onClick={handleHints} disabled={isLoading}>Hint</button>
+								<button onClick={handleGivingUp} disabled={isLoading}>Give up?</button>
 							</span>
 
 							<div>Current answer: {value}</div>
@@ -264,7 +309,9 @@ function App() {
 				<button onClick={handleLogout}>Logout</button>
 			</footer>
 
-			{/* <Leaderboards /> */}
+			<Leaderboards users={top10} />
+
+			
 		</div>
 	)
 }

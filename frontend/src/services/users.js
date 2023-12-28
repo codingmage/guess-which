@@ -12,7 +12,7 @@ async function registerUser (credentials) {
 	return response.data
 }
 
-async function getAllUsers () {
+async function getTop10Users () {
 	const request = await axios.get(baseUrl)
 	return request.data
 	/* return request.then((response) => response.data) */
@@ -28,4 +28,4 @@ async function updateUserScore (id, score) {
 
 }
 
-export default { getAllUsers, setToken, registerUser, updateUserScore }
+export default { getTop10Users, setToken, registerUser, updateUserScore }

@@ -1,14 +1,13 @@
-const Leaderboards = () => {
+const Leaderboards = ({users}) => {
+
 	return (
 		<div id="leaderboard-container">
-			<h3>Top 10 scores</h3>
+			<h3>Top 5 scores</h3>
 
 			<ul>
-				<li>User - 500</li>
-				<li>User - 500</li>
-				<li>User - 500</li>
-				<li>User - 500</li>
-				<li>User - 500</li>
+				{users.map(user => (
+					<li key={user.id}>{user.username} - {user.score}</li>
+				))}
 			</ul>
 		</div>
 	)

@@ -26,7 +26,7 @@ moviesRouter.get('/game', async (request, response) => {
     const chosenMovie = await new Promise((resolve, reject) => {
         db.get(query, usedIds, (err, row) => {
             if (err) {
-                throw err;
+                reject(err);
             }
     
             return row
@@ -47,7 +47,7 @@ moviesRouter.get('/names', async (request, response) => {
     await new Promise((resolve, reject) => {
         db.all(query, (err, rows) => {
             if (err) {
-                throw err;
+                reject(err)
             }
     
             rows.forEach((row) => {

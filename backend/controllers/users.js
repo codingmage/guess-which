@@ -45,7 +45,7 @@ usersRouter.post("/", async (request, response) => {
 usersRouter.get("/", async (request, response) => {
 
 	const users = await new Promise((resolve, reject) => {
-		db.all("SELECT id, username, score FROM users", (err, rows) => {
+		db.all("SELECT id, username, score FROM users ORDER BY score DESC LIMIT 5", (err, rows) => {
 			if (err) {
 				reject(err)
 			}

@@ -1,7 +1,6 @@
 :root {
   color: rgba(255, 255, 255, 0.87);
   background-color: #303F73;
-  /* height: 100vh; */
 }
 
 body {
@@ -93,6 +92,11 @@ footer {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.MuiTextField-root {
+  background-color: whitesmoke;
+  border: none;
 }
 
 /* :root {

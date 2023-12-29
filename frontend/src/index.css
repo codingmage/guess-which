@@ -175,3 +175,7 @@ li {
   flex-direction: column;
   align-items: center;
 }
+
+a:visited {
+  color:#303F73
+}

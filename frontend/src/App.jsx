@@ -9,6 +9,7 @@ import moviesService from "./services/movies"
 import { Autocomplete, Box, Button, TextField } from "@mui/material"
 import FavoriteIcon from "@mui/icons-material/Favorite"
 import LoadingIcon from "./components/LoadingIcon"
+import InfoModal from "./components/InfoModal"
 
 function App() {
 	const [playerScore, setPlayerScore] = useState(0)
@@ -30,7 +31,8 @@ function App() {
 	const [isLoading, setIsLoading] = useState()
 	const [lives, setLives] = useState(3)
 	const [top10, setTop10] = useState(["Loading..."])
-	const [hearts, setHearts]= useState()
+	const [hearts, setHearts] = useState()
+	const [showInfo, setShowInfo] = useState(false)
 
 
 	useEffect(() => {
@@ -234,6 +236,10 @@ function App() {
 		}
 	}
 
+	function handleClose() {
+		setShowInfo(false)
+	}
+
 	if (!user) {
 		return <LoginComponent loginUser={userLogin} registerUser={userRegister} extraLoading={isLoading} />
 	}
@@ -311,9 +317,11 @@ function App() {
 				<Leaderboards users={top10} />
 
 				<div className="button-container">
-					<Button color="info" variant="contained" size="small" id="info-button">info</Button>
+					<Button color="info" variant="contained" size="small" id="info-button" onClick={() => {setShowInfo(true)}}>info</Button>
 					<Button color="error" variant="contained" size="small" onClick={handleLogout}>Logout</Button>
 				</div>
+
+				<InfoModal closeInfo={handleClose} info={showInfo}  />
 			</div>
 
 			

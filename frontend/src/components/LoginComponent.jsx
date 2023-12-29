@@ -64,16 +64,15 @@ export function LoginComponent ({ loginUser, registerUser, extraLoading }) {
 					onClose={handleClose}         
 					aria-labelledby="modal-modal-title"
 					aria-describedby="modal-modal-description"
+					sx={{display: "flex", justifyContent: "center", alignItems: "center" }}
 				>
 					<Box 
 						sx={{
-							position: "absolute",
-							alignItems: "center",					
 							display: "flex",
+							alignItems: "center",	
+							justifyContent: "center",				
 							flexDirection: "column",
 							gap: "1rem",
-							top: "35%",
-							left: "40%",
 							backgroundColor: "black"
 						}}
 						component="form"

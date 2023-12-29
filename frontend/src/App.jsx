@@ -6,7 +6,7 @@ import Leaderboards from "./components/Leaderboards"
 import loginService from "./services/login"
 import userService from "./services/users"
 import moviesService from "./services/movies"
-import { Autocomplete, Box, TextField } from "@mui/material"
+import { Autocomplete, Box, Button, TextField } from "@mui/material"
 import FavoriteIcon from "@mui/icons-material/Favorite"
 import LoadingIcon from "./components/LoadingIcon"
 
@@ -45,7 +45,8 @@ function App() {
 
 				setAnswer({
 					title: movie.primary_title,
-					genre: movie.genres,
+					// adds space after every ","
+					genre: movie.genres.replaceAll(",", ", "),
 					year: movie.premiered,
 					runtime: movie.runtime_minutes,
 					rating: movie.rating,
@@ -102,7 +103,7 @@ function App() {
 		let currentHearts= []
 
 		for(let i = 0; i < lives; i++) {
-			currentHearts.push(<FavoriteIcon color="error" key={i} />)
+			currentHearts.push(<FavoriteIcon color="error" key={i} fontSize="small" />)
 		}
 		
 		setHearts(currentHearts)
@@ -149,9 +150,11 @@ function App() {
 
 	async function userLogin(userCredentials) {
 		try {
+			setIsLoading(true)
 			const user = await loginService.login(userCredentials)
 			userService.setToken(user.token)
 			setUser(user)
+			setIsLoading(false)
 			window.localStorage.setItem("loggedInUser", JSON.stringify(user))
 		} catch (error) {
 			window.alert("Wrong username or password")
@@ -177,17 +180,17 @@ function App() {
 		if(loseLife === 0) {
 			alert(`You're out of lives! Your final score was ${playerScore}. Thanks for playing.`)
 			await userService.updateUserScore(user.id, playerScore)
+			setGameStart(false)
 			setPlayerScore(0)
 			setLives(3)
 			setRound(0)
-			setGameStart(false)
 		} else {
 			setLives(loseLife)
 		}
 	}
 
 	async function handleGuess() {
-		if(value === answer.title || inputValue.toLowerCase === answer.title.toLowerCase)
+		if(value === answer.title)
 		{
 			alert("Correct!")
 			scoreCalculator()
@@ -232,7 +235,7 @@ function App() {
 	}
 
 	if (!user) {
-		return <LoginComponent loginUser={userLogin} registerUser={userRegister} />
+		return <LoginComponent loginUser={userLogin} registerUser={userRegister} extraLoading={isLoading} />
 	}
 	
 	if (!gameStart) {
@@ -241,21 +244,21 @@ function App() {
 
 	return (
 		<div id="home-container" >
-			<div id="game-container">
-				<h1>Game Start!</h1>
+			<div id="main-container">
+				<h1>Round {round}</h1>
 				
 				<Box>
 
 					{isLoading? 
 						<LoadingIcon />
 						: 
-						<div> 					
-						
-							<h2>Round: {round}</h2>
-							<h3>Lives: {hearts}</h3>
-
+						<div id="game-container"> 					
+							
+							<div>
+								<span id="game-state" >Lives: {hearts}</span>
+							</div>
 			
-							<ul>
+							<ul id="hints">
 								<li>Genre: {film.genre}</li>
 								<li>Year: {film.year}</li>
 								<li>Director: {film.director}</li>
@@ -280,36 +283,38 @@ function App() {
 									renderInput={(params) => <TextField {...params}     sx={{
 										borderRadius: "0.5rem",
 										"& fieldset": { borderRadius: "0.5rem" },
-									}} size="small" label="Movie" />}
+									}} size="small" placeholder="Movie" />}
 			
 								/>
 							</div>
-							<span>
-								<button onClick={handleGuess} disabled={isLoading}>Guess</button>
-								<button onClick={handleHints} disabled={isLoading}>Hint</button>
-								<button onClick={handleGivingUp} disabled={isLoading}>Give up?</button>
+							<span className="button-container">
+								<Button onClick={handleGuess} size="small" variant="contained" disabled={isLoading}>Guess</Button>
+								<Button onClick={handleHints} size="small" variant="contained"  disabled={isLoading}>Hint</Button>
+								<Button onClick={handleGivingUp} size="small" variant="contained"  disabled={isLoading}>Give up?</Button>
 							</span>
 
-							<div>Current answer: {value}</div>
+							<div>Current guess: {value}</div>
+
+							<div>Current score: {playerScore}</div>
 
 							<div>
-								<button onClick={handleRestart} disabled={isLoading} >Restart the game</button>
+								<Button variant="contained" size="small" onClick={handleRestart} disabled={isLoading} >Restart the game</Button>
 							</div>
 						</div>
 					}
-
-					<div>Current score: {playerScore}</div>
 
 				</Box>
 				
 			</div>
 
-			<footer>
-				<button>info</button>
-				<button onClick={handleLogout}>Logout</button>
-			</footer>
+			<div id="extra-content">
+				<Leaderboards users={top10} />
 
-			<Leaderboards users={top10} />
+				<div className="button-container">
+					<Button color="info" variant="contained" size="small" id="info-button">info</Button>
+					<Button color="error" variant="contained" size="small" onClick={handleLogout}>Logout</Button>
+				</div>
+			</div>
 
 			
 		</div>

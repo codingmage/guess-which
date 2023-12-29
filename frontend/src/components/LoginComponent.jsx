@@ -1,8 +1,9 @@
 import { useState } from "react"
 import Modal from "@mui/material/Modal"
 import Box from "@mui/material/Box"
+import { Button } from "@mui/material"
 
-export function LoginComponent ({ loginUser, registerUser }) {
+export function LoginComponent ({ loginUser, registerUser, extraLoading }) {
 
 	const [open, setOpen] = useState(false)
 	const [registerUsername, setRegisterUsername] = useState("")
@@ -45,14 +46,18 @@ export function LoginComponent ({ loginUser, registerUser }) {
 						<label>Username </label> <input onChange={({ target }) => setLoginUsername(target.value) } type="text" /> 
 					</div>
 					<div>
-						<label>Password </label> <input onChange={({ target }) => setLoginPassword(target.value) } type="text" />
+						<label>Password </label> <input onChange={({ target }) => setLoginPassword(target.value) } type="password" />
 					</div>
 
-					<div id="button-container">
-						<button id="login-button">Login</button>
-						<button id="register-button" onClick={handleOpen}>Register</button>
+					<div className="button-container">
+						<Button variant="contained" size="small" id="login-button" disabled={extraLoading} onClick={handleLogin} type="submit">Login</Button>
+						<Button id="register-button" variant="contained" size="small" color="secondary" disabled={extraLoading} onClick={handleOpen}>Register</Button>
 					</div>
+
+					
 				</form>
+
+				{extraLoading ? <h3>Loading...</h3> : ""}
 
 				<Modal 
 					open={open} 
@@ -63,8 +68,14 @@ export function LoginComponent ({ loginUser, registerUser }) {
 					<Box 
 						sx={{
 							position: "absolute",
-							top: "50%",
-							left: "50%",}}
+							alignItems: "center",					
+							display: "flex",
+							flexDirection: "column",
+							gap: "1rem",
+							top: "35%",
+							left: "40%",
+							backgroundColor: "black"
+						}}
 						component="form"
 						onSubmit={handleRegister}
 
@@ -75,7 +86,7 @@ export function LoginComponent ({ loginUser, registerUser }) {
 						<div>
 							<label>Password </label> <input onChange={({ target }) => setRegisterPassword(target.value) } type="password" />
 						</div>
-						<button id="register-button" type="submit">Register</button>
+						<Button variant="contained" id="register-button" type="submit">Register</Button>
 
 					</Box>
 				</Modal>

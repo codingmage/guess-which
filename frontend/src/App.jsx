@@ -160,6 +160,7 @@ function App() {
 			window.localStorage.setItem("loggedInUser", JSON.stringify(user))
 		} catch (error) {
 			window.alert("Wrong username or password")
+			setIsLoading(false)
 			console.log(error)
 		}
 	}
@@ -173,7 +174,9 @@ function App() {
 			setUser(user)
 			window.localStorage.setItem("loggedInUser", JSON.stringify(user))
 		} catch (error) {
-			console.log(error)
+			if(error.response.status === 400) {
+				alert("Invalid username. Please choose another.")
+			}
 		}
 	}
 

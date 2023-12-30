@@ -7,7 +7,7 @@ let db = new sqlite3.Database('./db/users.db');
 usersRouter.post("/", async (request, response) => {
 	const { username, password } = request.body
 
- 	if (username.length < 5) {
+ 	if (username.length < 3) {
 		return response.status(400).json({ error: "User validation failed: Invalid username" })
 	}
 

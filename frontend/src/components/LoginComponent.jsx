@@ -78,7 +78,7 @@ export function LoginComponent ({ loginUser, registerUser, extraLoading }) {
 						component="form"
 						onSubmit={handleRegister}
 
-					>
+					>	<h3>Both must be at least 3 characters long!</h3>
 						<div>
 							<label>Username </label> <input onChange={({ target }) => setRegisterUsername(target.value) }type="text" /> 
 						</div>

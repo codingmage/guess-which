@@ -1,10 +1,14 @@
 # Guess which!
 
-#### Video Demo: <URL www.youtube.com>
+#### Video Demo:
+
+    [My video](https://www.youtube.com/watch?v=fB3Ha-FOOhE)
 
 #### Description:
 
     React-based guessing game app, involving IMDb's top 1000 most popular films (at the time of creation).
+
+You can start the app by navigating to the "frontend" and to the "backend" folders and running `npm run dev` on both!
 
 Inspired by the SQL week, a React app that simulates a guessing game, based on a selection of the most popular IMDB movies at the time of the database download [09/10/2023]. The data files were downloaded directly from the [IMDB site](https://datasets.imdbws.com) and the SQL database was created using jojie's [imdb-sqlite](https://github.com/jojjeimdb-sqlite) which converted the specific files I needed. I then trimmed the database with SQL queries to only use the top 1000 films (at the time).
 

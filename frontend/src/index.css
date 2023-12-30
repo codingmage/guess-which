@@ -34,11 +34,16 @@ body {
   border-radius: 25px;
   padding: 1rem;
   gap: 1rem;
+  font-size: large;
 }
 
 label {
   display: flex;
   width: 4rem;
+}
+
+input {
+  font-size: 1rem;
 }
 
 #login-form {
@@ -174,6 +179,10 @@ li {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+a {
+  color:#303F73
 }
 
 a:visited {

@@ -6,7 +6,7 @@ const PreGameComponent = ({startTheGame, logUserOut}) => {
 		<div id="pre-game-container">
 			<Box>
 				<h1>Guess the movie!</h1>
-				<p>Can you guess which popular* movie it is based on the hints you get? Click on the button to start.</p>
+				<p>Can you guess which popular movie it is based on the hints you get? Click on the button to start.</p>
 
 				<p>You must select the movie from among the entries in the provided list. You can search for it, but for your answer to be recorded you must select the item in the dropdown menu! Only the English names are available</p>
 				<p>For each hint you ask for, your score multiplier will decrease. The genre hint is the first one and it is free! You get no extra points for blindly guessing though. You can also lose one life and give up on the current movie.</p>
